@@ -24,14 +24,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.quiz5.Gallery.GalleryActivity;
+import com.example.quiz5.Quiz.QuizActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
-    private static final String READ_MEDIA_IMAGES = Manifest.permission.READ_MEDIA_IMAGES;
-    private static final int REQUEST_EXTERNAL_STORAGE = 100;
-    private static final int REQUEST_SETTINGS_INTENT = 101;
-    private boolean is_storage_image_permitted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +37,18 @@ public class MainActivity extends AppCompatActivity {
         Button galleryButton = findViewById(R.id.MAIN_galleryButton);
         galleryButton.setOnClickListener(l -> {openGallery();});
 
+        Button quizButton = findViewById(R.id.Quiz);
+        quizButton.setOnClickListener(l -> {openQuiz();});
+
     }
 
     private void openGallery(){
         Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
+        startActivity(intent);
+    }
+
+    private void openQuiz(){
+        Intent intent = new Intent(MainActivity.this, QuizActivity.class);
         startActivity(intent);
     }
 

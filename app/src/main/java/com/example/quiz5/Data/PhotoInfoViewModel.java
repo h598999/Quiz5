@@ -1,4 +1,4 @@
-package com.example.quiz5;
+package com.example.quiz5.Data;
 import android.app.Application;
 
 import androidx.annotation.NonNull;

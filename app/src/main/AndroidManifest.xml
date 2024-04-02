@@ -33,6 +33,8 @@
             android:name=".Gallery.GalleryActivity" />
         <activity
             android:name=".Upload.UploadActivity" />
+        <activity
+            android:name=".Quiz.QuizActivity" />
 
     </application>
 

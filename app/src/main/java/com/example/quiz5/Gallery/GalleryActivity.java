@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quiz5.PhotoInfoViewModel;
+import com.example.quiz5.Data.PhotoInfoViewModel;
 import com.example.quiz5.R;
 import com.example.quiz5.Upload.UploadActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
