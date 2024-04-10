@@ -2,6 +2,21 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="AddImage()">
+        <State />
+      </entry>
+      <entry key="AddImage() (1)">
+        <State />
+      </entry>
+      <entry key="AnswerWrong()">
+        <State />
+      </entry>
+      <entry key="GalleryActivityTest">
+        <State />
+      </entry>
+      <entry key="QuizActivityTest">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>

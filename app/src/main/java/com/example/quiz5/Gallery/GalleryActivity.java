@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.quiz5.Data.PhotoInfo;
 import com.example.quiz5.Data.PhotoInfoViewModel;
 import com.example.quiz5.R;
 import com.example.quiz5.Upload.UploadActivity;
@@ -27,6 +28,7 @@ public class GalleryActivity extends AppCompatActivity {
    private GalleryAdapter adapter;
    private PhotoInfoViewModel viewModel;
    private Button uploadActvity;
+   private static List<PhotoInfo> allPhotos;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -45,6 +47,7 @@ public class GalleryActivity extends AppCompatActivity {
         viewModel.getAllPictures().observe(this, photoList -> {
             adapter = new GalleryAdapter(getApplication(), photoList);
             imageViews.setAdapter(adapter);
+            allPhotos = photoList;
         });
 
         uploadActvity = findViewById(R.id.new_Button);
@@ -63,5 +66,9 @@ public class GalleryActivity extends AppCompatActivity {
             getApplicationContext().grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
+    }
+
+    public static List<PhotoInfo> getAllPhotos(){
+        return allPhotos;
     }
 }

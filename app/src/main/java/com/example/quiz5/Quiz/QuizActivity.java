@@ -21,18 +21,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
-    private int Score = 0;
-    private int Plays = 0;
-    private PhotoInfo currentCorrect;
+    public int Score = 0;
+    public int Plays = 0;
+    private static PhotoInfo currentCorrect;
     private ImageView view;
-    private Button option1;
-    private Button option2;
-    private Button option3;
+    private static Button option1;
+    private static Button option2;
+    private static Button option3;
     private TextView score;
     private TextView countDown;
     private final static int DELAY_MILLIS = 2000;
     private boolean hardmode = false;
-    private PhotoInfoViewModel mViewModel;
+    public PhotoInfoViewModel mViewModel;
     private List<PhotoInfo> photoList = new ArrayList<PhotoInfo>();
     private List<Integer> indexList;
 
@@ -58,9 +58,10 @@ public class QuizActivity extends AppCompatActivity {
 
         mViewModel.getAllPictures().observe(this, pictures -> {
             pictures.forEach(p -> Log.d("Database", "Name: " + p.getName() + "Data: " + p.getImageData()));
-            photoList = pictures;
-
-            refresh(photoList, indexList);
+            if(!pictures.isEmpty()) {
+                photoList = pictures;
+                refresh(photoList, indexList);
+            }
         });
 
         option1.setOnClickListener(v -> {
@@ -154,6 +155,14 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             option3.setBackgroundColor(Color.GREEN);
         }
+    }
+
+    public static PhotoInfo getCorrect(){
+        return currentCorrect;
+    }
+
+    public static String[] getAllOptions(){
+        return new String[]{option1.getText().toString(), option2.getText().toString(), option3.getText().toString()};
     }
 }
 
