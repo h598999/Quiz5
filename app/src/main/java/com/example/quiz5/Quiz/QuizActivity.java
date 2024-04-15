@@ -1,5 +1,6 @@
 package com.example.quiz5.Quiz;
 
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,8 +22,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
-    public int Score = 0;
-    public int Plays = 0;
+
+    private static final String STATE_PLAYS = "Plays";
+    private static final String STATE_SCORE = "Score";
+    private static final String STATE_ImageData = "Data";
+    private static final String STATE_Option1 = "option1";
+    private static final String STATE_Option2 = "option2";
+    private static final String STATE_Option3 = "option3";
+    private static final String State_name = "name";
+
+    public int Score;
+    public int Plays;
     private static PhotoInfo currentCorrect;
     private ImageView view;
     private static Button option1;
@@ -42,13 +52,20 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceBundle){
         super.onCreate(savedInstanceBundle);
-        setContentView(R.layout.activity_quiz);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_quiz_land);
+        } else {
+            setContentView(R.layout.activity_quiz);
+        }
+
         mViewModel = new PhotoInfoViewModel(getApplication());
         Score = 0;
         indexList = new ArrayList<>();
         indexList.add(0);
         indexList.add(1);
         indexList.add(2);
+        Score = 0;
+        Plays = 0;
 
         view = findViewById(R.id.QuizImage_IMAGEVIEW);
         option1 = findViewById(R.id.QuizOption1_BUTTON);
@@ -56,13 +73,33 @@ public class QuizActivity extends AppCompatActivity {
         option3 = findViewById(R.id.QuizOption3_BUTTON);
         score = findViewById(R.id.ScoreTextView_GAME);
 
-        mViewModel.getAllPictures().observe(this, pictures -> {
-            pictures.forEach(p -> Log.d("Database", "Name: " + p.getName() + "Data: " + p.getImageData()));
-            if(!pictures.isEmpty()) {
-                photoList = pictures;
-                refresh(photoList, indexList);
-            }
-        });
+        if (savedInstanceBundle != null){
+            Plays = savedInstanceBundle.getInt(STATE_PLAYS, 0);
+            Score = savedInstanceBundle.getInt(STATE_SCORE,0);
+            byte[] imageData = savedInstanceBundle.getByteArray(STATE_ImageData);
+            String name = savedInstanceBundle.getString(State_name);
+            currentCorrect = new PhotoInfo(name, imageData);
+            option1.setText(savedInstanceBundle.getString(STATE_Option1));
+            option2.setText(savedInstanceBundle.getString(STATE_Option2));
+            option3.setText(savedInstanceBundle.getString(STATE_Option3));
+            score.setText(Score + "/" + Plays);
+            view.setImageBitmap(BitmapFactory.decodeByteArray(currentCorrect.getImageData(), 0, currentCorrect.getImageData().length));
+            mViewModel.getAllPictures().observe(this, pictures -> {
+                pictures.forEach(p -> Log.d("Database", "Name: " + p.getName() + "Data: " + p.getImageData()));
+                if (!pictures.isEmpty()) {
+                    photoList = pictures;
+                }
+            });
+        } else {
+
+            mViewModel.getAllPictures().observe(this, pictures -> {
+                pictures.forEach(p -> Log.d("Database", "Name: " + p.getName() + "Data: " + p.getImageData()));
+                if (!pictures.isEmpty()) {
+                    photoList = pictures;
+                    refresh(photoList, indexList);
+                }
+            });
+        }
 
         option1.setOnClickListener(v -> {
             if (hardmode){
@@ -157,6 +194,20 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Check the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.activity_quiz_land);
+            // Update your landscape layout
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_quiz);
+            // Update your portrait layout
+        }
+    }
+
     public static PhotoInfo getCorrect(){
         return currentCorrect;
     }
@@ -164,7 +215,20 @@ public class QuizActivity extends AppCompatActivity {
     public static String[] getAllOptions(){
         return new String[]{option1.getText().toString(), option2.getText().toString(), option3.getText().toString()};
     }
-}
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // Make sure to call the super method so that the states of our views are saved
+        super.onSaveInstanceState(outState);
+        // Save our own state now
+        outState.putInt(STATE_SCORE, Score);
+        outState.putInt(STATE_PLAYS, Plays);
+        outState.putByteArray(STATE_ImageData, currentCorrect.getImageData());
+        outState.putString(STATE_Option1, option1.getText().toString());
+        outState.putString(STATE_Option2, option2.getText().toString());
+        outState.putString(STATE_Option3, option3.getText().toString());
+        outState.putString(State_name, currentCorrect.getName());
+    }
+}
 
 

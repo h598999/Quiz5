@@ -34,7 +34,9 @@
         <activity
             android:name=".Upload.UploadActivity" />
         <activity
-            android:name=".Quiz.QuizActivity" />
+            android:name=".Quiz.QuizActivity"
+            android:configChanges="orientation" />
+
 
     </application>
 
