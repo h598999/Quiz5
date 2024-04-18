@@ -63,45 +63,45 @@ public class UploadActivity extends AppCompatActivity {
 
     }
 
+    // Starts an implicit intent given the parameters, the intent is meant to open the gallery for
+    // retrieving an image from the users photo library
     private void openGallery(){
         Intent intent = new Intent();
+        // Set the action to be Intent.ACTION_GET_CONTENT
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        // Set the category to be Intent.CATEGORY_OPENABLE
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+        // Set the type to be "image/*"
         intent.setType("image/*");
+        //Starts the activity for result
         startActivityForResult(intent, YOUR_PERMISSION_REQUEST_CODE);
     }
 
-    private void requestExternalStoragePermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
-            }
-        }
-    }
-
+    //Finishes the uploadActicity and returns to the GalleryActivity
     private void go(){
         finish();
     }
 
+    //
     private void submit() throws IOException {
+        // Checks that there is a name and image selected
         String enteredText = getEnteredText();
         Uri imageUri = getUri();
 
         if (enteredText == null || imageUri == null){
             return;
         }
+
+        //Inserts a new PhotoInfo object into the database with the given name, and the imagedata of the selected image
         repo.insert(new PhotoInfo(enteredText, this.convertUriToByteArray(imageUri)));
         Toast.makeText(this, "Image added", Toast.LENGTH_SHORT).show();
-        int uid = Binder.getCallingUid();
-        String callingPackage = getPackageManager().getNameForUid(uid);
-        getApplication().grantUriPermission(callingPackage, imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //int uid = Binder.getCallingUid();
+        //String callingPackage = getPackageManager().getNameForUid(uid);
+        //getApplication().grantUriPermission(callingPackage, imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         reset();
     }
 
-    private void goBack(){
-        Log.d("BackButton Upload", "Pressed back");
-    }
-
+    // Is called when pressing submit button, clears the view
     private void reset(){
         view = findViewById(R.id.imageView);
         view.setImageResource(0);
@@ -110,6 +110,7 @@ public class UploadActivity extends AppCompatActivity {
         this.imageUri = null;
     }
 
+    // Is called when the submit button is pressed, if the text entered is null or empty a error message will display
     private String getEnteredText(){
         input = findViewById(R.id.inputText_input);
         String enteredText = input.getText().toString();
@@ -120,6 +121,7 @@ public class UploadActivity extends AppCompatActivity {
         }
         return enteredText;
     }
+    // Is called when the submit button is pressed, if no image is selected an error message will display
     private Uri getUri(){
         if (this.imageUri == null){
             Toast.makeText(getApplicationContext(), "Please enter a image", Toast.LENGTH_SHORT).show();
@@ -128,12 +130,16 @@ public class UploadActivity extends AppCompatActivity {
         return this.imageUri;
     }
 
+    // Is called when the implicit intent from the openGallery method is finished
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        // Checks that the correct request and resultcode and the data is not null
         if (requestCode == YOUR_PERMISSION_REQUEST_CODE && resultCode == RESULT_OK && data != null){
+            //Sets the imageUri field to be the data returned by the intent
             imageUri = data.getData();
             Log.d("Image", "Image selected: " + imageUri.toString());
+            //Sets the image in the imageView to be the picture selected
             view = findViewById(R.id.imageView);
             view.setImageURI(imageUri);
         }

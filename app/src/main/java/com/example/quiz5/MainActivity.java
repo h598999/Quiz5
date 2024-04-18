@@ -34,99 +34,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Find the button that directs to gallery activity
         Button galleryButton = findViewById(R.id.MAIN_galleryButton);
+        // setOnClickListener on the button and bind the openGallery() method
         galleryButton.setOnClickListener(l -> {openGallery();});
 
+        //Find the button that directs to the quiz activity
         Button quizButton = findViewById(R.id.Quiz);
+
+        //setOnClickListener on the button and bind the openQuiz() method
         quizButton.setOnClickListener(l -> {openQuiz();});
 
     }
 
+    //Method for starting the galleryActivity
     private void openGallery(){
+        // Creates a new intent for opening the gallery activity
         Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
+        // Starts the galleryActivity by using the startActivity method and using the previously created intent
         startActivity(intent);
     }
 
+    //Method for opening the Quiz activity
     private void openQuiz(){
+        // Creates a new intent for opening the quiz activity
         Intent intent = new Intent(MainActivity.this, QuizActivity.class);
+        // Starts the quizActiviy by using the startActivity method and using the previously created intent
         startActivity(intent);
     }
-
-    /*
-    private void requestRuntimePermission(){
-        if (ContextCompat.checkSelfPermission(MainActivity.this, READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED){
-            is_storage_image_permitted = true;
-            Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
-            startActivity(intent);
-        } else {
-            request_permission_launcher_storage_items.launch(READ_MEDIA_IMAGES);
-        }
-    }
-
-    /*
-    private ActivityResultLauncher<String> request_permission_launcher_storage_items =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(),
-                    isGranted -> {
-                    if (isGranted){
-                        Log.d("Media", READ_MEDIA_IMAGES + " Granted");
-                    } else {
-                        Log.d("Media", READ_MEDIA_IMAGES + " is not granted");
-                        is_storage_image_permitted = false;
-                    }
-                    });
-
-    /*
-    private void requestRuntimePermission(){
-        //Permission for sdk between 23 and 29
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && Build.VERSION.SDK_INT<Build.VERSION_CODES.R){
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
-            }
-            //Permission storage for sdk 30 or above
-        } else if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()){
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
-                    startActivityIfNeeded(intent, REQUEST_SETTINGS_INTENT);
-                } catch(Exception e){
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    startActivityIfNeeded(intent, REQUEST_SETTINGS_INTENT);
-                }
-            }
-        }
-
-    }
-    /*
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_EXTERNAL_STORAGE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Permission granted, you can read external storage", Toast.LENGTH_SHORT).show();
-            } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("This app needs to read external storage to work, please allow Read external storage permission from" +
-                        "settings to proceed");
-                builder.setTitle("Permission required")
-                        .setCancelable(false)
-                        .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
-                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                                intent.setData(uri);
-                                startActivity(intent);
-                                dialog.dismiss();
-                            }
-                        });
-                builder.show();
-            } else {
-                requestRuntimePermission();
-            }
-        }
-    }*/
 }

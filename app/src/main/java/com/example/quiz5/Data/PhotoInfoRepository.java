@@ -14,85 +14,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+//Repository class
 public class PhotoInfoRepository {
+    //Declaring private fields
     private PhotoInfoDao dao;
     private LiveData<List<PhotoInfo>> allPictures;
     private Application application;
 
+    // Constructor for the PhotoInfoRepository object, takes an Application as a parameter
     public PhotoInfoRepository(Application application){
+        // Defines the callback that initiates data in the database
         PhotoInfoRoomDatabase.setRoomDatabaseCallback(application.getApplicationContext());
+        // Sets the db field to be the result of the getDatabase method from the static PhotoInfoRoomDatabase class
         PhotoInfoRoomDatabase db = PhotoInfoRoomDatabase.getDatabase(application);
         this.application = application;
+        // Sets the dao field to be the dao instance from the database
         dao = db.dao();
+        // Sets the allPictures field to be the result of the getAllEntries method from the dao
         allPictures = dao.getAllEntries();
     }
 
+    // Returns the value of the allPictures field
     public LiveData<List<PhotoInfo>> getAllPictures(){
         Log.d("Database", "Retrieved all pictures");
         return allPictures;
     }
 
+    //Inserts the parameter into the database
     public void insert(PhotoInfo photoinfo){
         Log.d("Database", "Inserted photo with name: " + photoinfo.getName() + " and URI: " + photoinfo.getImageData());
+        // Uses the ExecutorService from the database to asynchronusly insert the parameter into the database
         PhotoInfoRoomDatabase.databaseWriteExecutor.execute(() -> {
             dao.insert(photoinfo);
         });
     }
 
-    public void insert(String name, Uri imageUri){
-        PhotoInfo photoinfo = new PhotoInfo(name, convertUriToByteArray(imageUri));
-        Log.d("Database", "Inserted photo with name: " + photoinfo.getName() + " and URI: " + photoinfo.getImageData());
-        PhotoInfoRoomDatabase.databaseWriteExecutor.execute(() -> {
-            dao.insert(photoinfo);
-        });
-    }
-
-    private byte[] convertUriToByteArray(Uri imageUri) {
-        try {
-            // Open an input stream from the image URI
-            InputStream inputStream = this.application.getApplicationContext().getContentResolver().openInputStream(imageUri);
-            if (inputStream != null) {
-                // Decode the input stream into a bitmap
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-                // Convert the bitmap to a byte array
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-                // Close the input stream
-                inputStream.close();
-
-                return byteArray;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public void resetDatabase() {
-        Log.d("Database", "Database reset");
-        PhotoInfoRoomDatabase.databaseWriteExecutor.execute(() -> {
-            dao.deleteAll();
-        });
-    }
-
+    // Deletes the given parameter from the database
     public void delete(PhotoInfo photoInfo) {
         Log.d("Database", "Deleted photo with name: " + photoInfo.getName() + " and URI: " + photoInfo.getImageData());
+        // Uses the ExecutorService from the database to asynchronusly delete the parameter into the database
         PhotoInfoRoomDatabase.databaseWriteExecutor.execute(() -> {
             dao.delete(photoInfo);
-        });
-    }
-
-    public void printAllEntries(){
-        Log.d("Database", "Printed all entries");
-        PhotoInfoRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<PhotoInfo> allEntries = dao.getAllEntriesSync(); // Get entries synchronously
-            for (PhotoInfo entry : allEntries) {
-                Log.d("Database", "id: " + entry.getId() + "Name: " + entry.getName() + " Uri: "+ entry.getImageData());
-            }
         });
     }
 }

@@ -52,6 +52,7 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceBundle){
         super.onCreate(savedInstanceBundle);
+
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_quiz_land);
         } else {
@@ -102,23 +103,23 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         option1.setOnClickListener(v -> {
-            if (hardmode){
-                timer.cancel();
-            }
+            //if (hardmode){
+            //    timer.cancel();
+            //}
             Boolean isCorrect = checkAnswer(option1.getText().toString());
             answer(isCorrect, option1, option2, option3);
         });
         option2.setOnClickListener(v -> {
-            if (hardmode){
-                timer.cancel();
-            }
+            //if (hardmode){
+            //    timer.cancel();
+            //}
             Boolean isCorrect = checkAnswer(option2.getText().toString());
             answer(isCorrect, option2, option1, option3);
         });
         option3.setOnClickListener(v -> {
-            if (hardmode){
-                timer.cancel();
-            }
+            //if (hardmode){
+            //    timer.cancel();
+            //}
             Boolean isCorrect = checkAnswer(option3.getText().toString());
             answer(isCorrect, option3, option2, option1);
         });
@@ -168,20 +169,21 @@ public class QuizActivity extends AppCompatActivity {
         option2.setText(photoList.get(indexList.get(1)).getName());
         option3.setText(photoList.get(indexList.get(2)).getName());
         score.setText(Score + "/" + Plays);
-        if (hardmode){
-            timer = new CountDownTimer(30000, 1000) {
 
-                public void onTick(long millisUntilFinished) {
-                    countDown.setText(""+millisUntilFinished / 1000);
-                    // logic to set the EditText could go here
-                }
+        //if (hardmode){
+        //    timer = new CountDownTimer(30000, 1000) {
 
-                public void onFinish() {
-                    Plays++;
-                    refresh(photoList, indexList);
-                }
-            }.start();
-        }
+        //        public void onTick(long millisUntilFinished) {
+        //            countDown.setText(""+millisUntilFinished / 1000);
+        //            // logic to set the EditText could go here
+        //        }
+
+        //        public void onFinish() {
+        //            Plays++;
+        //            refresh(photoList, indexList);
+        //        }
+        //    }.start();
+        //}
     }
 
     private void colourCorrect(Button option1, Button option2, Button option3){

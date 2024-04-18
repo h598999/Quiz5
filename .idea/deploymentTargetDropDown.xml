@@ -8,13 +8,13 @@
       <entry key="AddImage() (1)">
         <State />
       </entry>
-      <entry key="AnswerWrong()">
-        <State />
-      </entry>
       <entry key="GalleryActivityTest">
         <State />
       </entry>
       <entry key="QuizActivityTest">
+        <State />
+      </entry>
+      <entry key="Tests in 'com.example.quiz5'">
         <State />
       </entry>
       <entry key="app">
